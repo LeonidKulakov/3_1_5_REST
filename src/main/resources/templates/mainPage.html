@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+
+<body>
+<!-- Шапка -->
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-light">
+        <div class="container-fluid">
+            <div th:object="${user}">
+                <span class="fw-bold" th:text="*{username}"/>
+                <span> with roles: </span>
+                <span>USER </span>
+                <span>ADMIN</span>
+            </div>
+            <a class="text-decoration-none font-weight-bold text-secondary"
+               href="http://localhost:8080/logout">Logout</a>
+        </div>
+    </nav>
+</header>
+<!-- Шапка (конец)-->
+
+<div class="row">
+    <!-- столбец слева -->
+    <div class="col bg-white px-0">
+        <div class="d-flex flex-column">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <button class="nav-link text-start active" id="v-pills-admin-tab" data-bs-toggle="pill"
+                        data-bs-target="#v-pills-admin" type="button" role="tab" aria-controls="v-pills-admin"
+                        aria-selected="true">Admin
+                </button>
+                <button class="nav-link text-start" id="v-pills-user-tab" data-bs-toggle="pill"
+                        data-bs-target="#v-pills-user"
+                        type="button" role="tab" aria-controls="v-pills-user" aria-selected="false">User
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- столбец слева (Конец)-->
+
+    <!-- 11 колонок справа -->
+    <div class="col-11 bg-light">
+        <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="v-pills-admin" role="tabpanel"
+                 aria-labelledby="v-pills-home-tab">
+                <h1>Admin panel</h1>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <!-- Закладка Users table в col-11 -->
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
+                                data-bs-target="#home" type="button" role="tab" aria-controls="home"
+                                aria-selected="true">Users table
+                        </button>
+                    </li>
+                    <!-- Закладка Users table в col-11 (конец)-->
+                    <!-- Закладка New User в col-11 -->
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile"
+                                type="button" role="tab" aria-controls="profile"
+                                aria-selected="false">New User
+                        </button>
+                    </li>
+                    <!-- Закладка New User в col-11 (конец)-->
+                </ul>
+                <!-- Содержимое закладок в col-11 -->
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+
+
+                        <div class="tab-pane fade show active" id="nav-users" role="tabpanel"
+                             aria-labelledby="nav-users-tab">
+                            <div class="p-2">
+                                <h5>All users</h5>
+                            </div>
+
+
+                            <table class="table table-striped bg-white">
+                                <!-- Шарка таблицы -->
+                                <thead>
+                                <tr>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Username</th>
+                                    <th scope="col">Cite</th>
+                                    <th scope="col">Age</th>
+                                    <th scope="col">Role</th>
+                                    <th scope="col">Edit</th>
+                                    <th scope="col">Delete</th>
+                                </tr>
+                                </thead>
+                                <!-- Шарка таблицы (Конец)-->
+                                <tbody>
+                                <tr th:each="userf: ${users}">
+                                    <td th:text="${userf.getId()}"></td>
+                                    <td th:text="${userf.getUsername()}"></td>
+                                    <td th:text="${userf.getCity()}"></td>
+                                    <td th:text="${userf.getAge()}"></td>
+                                    <td th:text="${userf.rolesToString()}"></td>
+                                    <!-- Кнопка изменения -->
+                                    <td>
+                                        <button type="button" class="btn btn-info" data-bs-toggle="modal"
+                                                th:attr="data-bs-target='#editModal'+${userf.id}">
+                                            Edit
+                                        </button>
+                                    </td>
+                                    <!-- Кнопка изменения (Конец) -->
+                                    <!-- Кнопка удаления -->
+                                    <td>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                                th:attr="data-bs-target='#deleteModal'+${userf.id}">
+                                            Delete
+                                        </button>
+                                    </td>
+                                    <!-- Кнопка удаления (Конец)-->
+                                </tr>
+                                </tbody>
+                            </table>
+                            <!--users info table end-->
+                        </div>
+
+
+
+                    </div>
+                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        2222
+                    </div>
+                </div>
+            </div>
+            <!-- Содержимое закладок в col-11(конец)-->
+
+            <!-- Синяя закладка User  -->
+            <div class="tab-pane fade" id="v-pills-user" role="tabpanel"
+                 aria-labelledby="v-pills-profile-tab">User User User
+            </div>
+            <!-- Синяя закладка User (Конец) -->
+        </div>
+    </div>
+    <!-- 11 колонок справа (Конец) -->
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</div>
+</body>
+</html>
