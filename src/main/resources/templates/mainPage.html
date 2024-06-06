@@ -72,7 +72,6 @@
                     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 
 
-
                         <div class="tab-pane fade show active" id="nav-users" role="tabpanel"
                              aria-labelledby="nav-users-tab">
                             <div class="p-2">
@@ -124,10 +123,65 @@
                         </div>
 
 
-
                     </div>
                     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                        2222
+
+
+                        <div class="row justify-content-center align-items-center bg-white">
+                            <div class="col-4">
+                                <form class="text-center" method="POST" action="http://localhost:8080/admin/add"
+                                      th:object="${user}">
+                                    <div class="form-group fw-bold">
+
+                                        <div class="form-group m-3">
+                                            <div class="form-group m-3">
+                                                <label for="username" class="col-form-label">Username</label>
+                                                <input type="text" class="form-control" id="username"
+                                                       name="username" value="" required/>
+                                            </div>
+
+                                            <div class="form-group m-3">
+                                                <label for="city" class="col-form-label">City</label>
+                                                <input type="text" class="form-control" id="city"
+                                                       name="city" value="" required/>
+                                            </div>
+
+                                            <div class="form-group m-3">
+                                                <label for="age" class="col-form-label">Age</label>
+                                                <input type="text" class="form-control" id="age"
+                                                       name="age" value="" required/>
+                                            </div>
+
+                                            <div class="form-group m-3">
+                                                <label for="password" class="col-form-label">Password</label>
+                                                <input type="password" class="form-control" id="password"
+                                                       name="password" value="" required/>
+                                            </div>
+                                            <!--Массив строк как RequestParam -->
+                                            <div class="form-group m-3" readonly="readonly">
+                                                <label for="rolesArray">Role</label>
+                                                <select class="form-select w-100" multiple
+                                                        aria-label="multiple select example"
+                                                        size="2"
+                                                        id="rolesArray"
+                                                        name="rolesArray">
+                                                    <option selected="true">
+                                                        USER
+                                                    </option>
+                                                    <option>
+                                                        ADMIN
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <!--Массив строк как RequestParam (конец) -->
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Add new user</button>
+                                </form>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
             </div>
@@ -135,7 +189,38 @@
 
             <!-- Синяя закладка User  -->
             <div class="tab-pane fade" id="v-pills-user" role="tabpanel"
-                 aria-labelledby="v-pills-profile-tab">User User User
+                 aria-labelledby="v-pills-profile-tab">
+                <h1 class="ps-3">User information-page</h1>
+                <div class="container-fluid">
+                    <div class="row border">
+                        <h5 class="p-2">About user</h5>
+                    </div>
+                    <div class="row border bg-white">
+                        <table class="table table-borderless table-striped">
+                            <thead>
+                            <tr class="border-top">
+                                <th scope="col">ID</th>
+                                <th scope="col">Username</th>
+                                <th scope="col">City</th>
+                                <th scope="col">Age</th>
+                                <th scope="col">Role</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="border-top bg-light" th:object="${user}">
+                                <td th:text="*{id}"/>
+                                <td th:text="*{username}"/>
+                                <td th:text="*{city}"/>
+                                <td th:text="*{age}"/>
+                                <td>
+                                    <th:block th:each="role : *{getRoles()}">
+                                        &nbsp;<span th:text="${role.toString()}"/>
+                                    </th:block>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
             <!-- Синяя закладка User (Конец) -->
         </div>

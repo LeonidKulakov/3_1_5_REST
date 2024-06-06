@@ -4,17 +4,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
+    private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(RoleRepository roleRepository,
+                           UserRepository userRepository,
+                           PasswordEncoder passwordEncoder) {
+        this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -51,6 +58,13 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public User addRoles(User user, String[] roles) {
+        user.setRoles(Arrays.stream(roles).map(el -> roleRepository.findByName("ROLE_".concat(el)).get())
+                .collect(Collectors.toList()));
+        return user;
     }
 
 }

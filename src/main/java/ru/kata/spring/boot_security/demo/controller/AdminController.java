@@ -3,10 +3,7 @@ package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
@@ -14,7 +11,9 @@ import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -47,8 +46,9 @@ public class AdminController {
     }
 
     @PostMapping(value = "add")
-    public String add(User user) {
-        userService.add(user);
+    public String add(@ModelAttribute("user") User user,
+                      @RequestParam("rolesArray") String[] rolesArray) {
+        userService.add(userService.addRoles(user, rolesArray));
         return "redirect:/admin/test";
     }
 
