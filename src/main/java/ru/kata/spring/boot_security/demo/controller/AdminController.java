@@ -4,16 +4,12 @@ package ru.kata.spring.boot_security.demo.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Controller
 @RequestMapping("/admin")
@@ -35,15 +31,6 @@ public class AdminController {
         return "mainPage";
     }
 
-    @GetMapping(value = "add")
-    public ModelAndView printAdd() {
-        User user = new User();
-        ModelAndView mav = new ModelAndView("add");
-        mav.addObject("user", user);
-        List<Role> roles = roleService.findAll();
-        mav.addObject("allRoles", roles);
-        return mav;
-    }
 
     @PostMapping(value = "add")
     public String add(@ModelAttribute("user") User user,
@@ -52,15 +39,6 @@ public class AdminController {
         return "redirect:/admin/test";
     }
 
-    @GetMapping(value = "update")
-    public ModelAndView printUpdate() {
-        User user = new User();
-        ModelAndView mav = new ModelAndView("update");
-        mav.addObject("user", user);
-        List<Role> roles = roleService.findAll();
-        mav.addObject("allRoles", roles);
-        return mav;
-    }
 
     @PostMapping(value = "update")
     public String update(@ModelAttribute("user") User user,
@@ -69,10 +47,6 @@ public class AdminController {
         return "redirect:/admin/test";
     }
 
-    @GetMapping(value = "delete")
-    public String printDelete() {
-        return "delete";
-    }
 
     @PostMapping(value = "delete")
     public String delete(@RequestParam("id") Long id) {
