@@ -63,8 +63,9 @@ public class AdminController {
     }
 
     @PostMapping(value = "update")
-    public String update(User user) {
-        userService.updateUser(user);
+    public String update(@ModelAttribute("user") User user,
+                         @RequestParam("rolesArray") String[] rolesArray) {
+        userService.updateUser(userService.addRoles(user, rolesArray));
         return "redirect:/admin/test";
     }
 
@@ -75,7 +76,6 @@ public class AdminController {
 
     @PostMapping(value = "delete")
     public String delete(@RequestParam("id") Long id) {
-        System.out.println(111);
         userService.delete(id);
         return "redirect:/admin/test";
     }
