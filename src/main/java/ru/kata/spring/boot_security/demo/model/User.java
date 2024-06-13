@@ -53,8 +53,15 @@ public class User {
         this.city = city;
         this.roles = roles;
     }
+    public User(Long id, String username, String city, Integer age, String password) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.age = age;
+        this.city = city;
+    }
 
-    public User(Long id, String username, String password, Integer age, String city, List<Role> roles) {
+    public User(Long id, String username, String city, Integer age, String password, List<Role> roles) {
         this.id = id;
         this.username = username;
         this.password = password;

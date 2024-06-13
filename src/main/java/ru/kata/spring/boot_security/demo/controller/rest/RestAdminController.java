@@ -3,16 +3,19 @@ package ru.kata.spring.boot_security.demo.controller.rest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.model.AddUserModel;
+import ru.kata.spring.boot_security.demo.model.EditUserModel;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
+
 @RestController
-public class Test {
+public class RestAdminController {
     private final UserService userService;
 
-    public Test(UserService userService) {
+    public RestAdminController(UserService userService) {
         this.userService = userService;
     }
 
@@ -23,19 +26,31 @@ public class Test {
                 new ResponseEntity<>(userList, HttpStatus.NOT_FOUND) :
                 new ResponseEntity<>(userList, HttpStatus.OK);
     }
-    @PostMapping(value = "/users")
-    public ResponseEntity<HttpStatus> add(@RequestBody @Valid Object o) {
-        System.out.println("Я работаю");
-        System.out.println(o.toString());
+
+    @PostMapping(value = "admin/adds")
+    public ResponseEntity<HttpStatus> add(@RequestBody @Valid AddUserModel user) {
+        userService.addAboutAUM(user);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @GetMapping("admin/user/{id}")
     public ResponseEntity<User> getUser(@PathVariable long id) {
         final User user = userService.findById(id);
-        System.out.println(user);
         return user != null
                 ? new ResponseEntity<>(user, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping(value = "admin/delete/{id}")
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") Long id) {
+        userService.delete(id);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PatchMapping(value = "admin/update")
+    public ResponseEntity<HttpStatus> update(@RequestBody @Valid EditUserModel user) {
+        System.out.println(user);
+        userService.updateUser(user);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 }

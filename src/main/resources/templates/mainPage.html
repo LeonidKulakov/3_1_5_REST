@@ -98,7 +98,6 @@
                                 <tbody id="usersTBody">
                                 </tbody>
                             </table>
-                            <!--users info table end-->
                         </div>
 
 
@@ -108,35 +107,38 @@
                         <!-- Форма создания нового пользователя в закладке -->
                         <div class="row justify-content-center align-items-center bg-white">
                             <div class="col-4">
-                                <form class="text-center" method="POST" action="http://localhost:8080/admin/add"
-                                      th:object="${user}">
+                                <form class="text-center" name="addForm">
                                     <div class="form-group fw-bold">
-                                        <!--Объект без ролей как ModelAttribute -->
+                                        <!--Объект без ролей -->
                                         <div class="form-group m-3">
                                             <div class="form-group m-3">
-                                                <label for="username" class="col-form-label">Username</label>
-                                                <input type="text" class="form-control" id="username"
-                                                       name="username" value="" required/>
+                                                <label for="usernameNewUser" class="col-form-label">Username</label>
+                                                <input class="form-control" type="text"
+                                                       id="usernameNewUser"
+                                                       name="username"
+                                                       placeholder="username">
                                             </div>
 
                                             <div class="form-group m-3">
                                                 <label for="city" class="col-form-label">City</label>
                                                 <input type="text" class="form-control" id="city"
-                                                       name="city" value="" required/>
+                                                       name="city" required/>
                                             </div>
 
                                             <div class="form-group m-3">
                                                 <label for="age" class="col-form-label">Age</label>
                                                 <input type="text" class="form-control" id="age"
-                                                       name="age" value="" required/>
+                                                       name="age" required/>
                                             </div>
 
                                             <div class="form-group m-3">
-                                                <label for="password" class="col-form-label">Password</label>
-                                                <input type="password" class="form-control" id="password"
-                                                       name="password" value="" required/>
+                                                <label for="passwordNewUser" class="col-form-label">Password</label>
+                                                <input class="form-control" type="password"
+                                                       minlength="1" required
+                                                       id="passwordNewUser"
+                                                       name="password">
                                             </div>
-                                            <!--Объект без ролей как ModelAttribute (Конец) -->
+                                            <!--Объект без ролей  (Конец) -->
                                             <!--Массив строк как RequestParam -->
                                             <div class="form-group m-3" readonly="readonly">
                                                 <label for="rolesArray">Role</label>
@@ -146,10 +148,10 @@
                                                         id="rolesArray"
                                                         name="rolesArray">
                                                     <option selected="true">
-                                                        USER
+                                                        ROLE_USER
                                                     </option>
                                                     <option>
-                                                        ADMIN
+                                                        ROLE_ADMIN
                                                     </option>
                                                 </select>
                                             </div>
@@ -186,18 +188,9 @@
                                 <th scope="col">Role</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr class="border-top bg-light" th:object="${user}">
-                                <td th:text="*{id}"/>
-                                <td th:text="*{username}"/>
-                                <td th:text="*{city}"/>
-                                <td th:text="*{age}"/>
-                                <td>
-                                    <th:block th:each="role : *{getRoles()}">
-                                        &nbsp;<span th:text="${role.toString()}"/>
-                                    </th:block>
-                                </td>
-                            </tr>
+                            </thead>
+                            <tbody id="userData">
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -273,7 +266,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Close
+                                            data-bs-dismiss="modal" id="closeDelete">Close
                                     </button>
                                     <input type="submit" class="btn btn-danger"
                                            value="Delete"/>
@@ -355,17 +348,17 @@
                                             id="rolesArrayEdit"
                                             name="rolesArray">
                                         <option selected="true">
-                                            USER
+                                            ROLE_USER
                                         </option>
                                         <option>
-                                            ADMIN
+                                            ROLE_ADMIN
                                         </option>
                                     </select>
                                 </div>
 
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Close
+                                            data-bs-dismiss="modal" id="closeEdit">Close
                                     </button>
                                     <input type="submit" class="btn btn-danger"
                                            value="Edit"/>
@@ -390,11 +383,15 @@
         crossorigin="anonymous"></script>
 </div>
 <script>
+    /**
+     * Из отдельного файла JS не подгружает, перепробовал все что нашел в интернете...
+     * */
+
     /*
-* Заполнение таблицы пользователями
-* innerHTML для передачи контента
-* insertRow и insertCell для создания строк и столюцов соответственно
-* */
+    * Заполнение таблицы пользователями
+    * innerHTML для передачи контента
+    * insertRow и insertCell для создания строк и столюцов соответственно
+    * */
     function getUserList() {
         const tableBody = document.getElementById("usersTBody");
         fetch('/users')
@@ -419,21 +416,44 @@
             .catch(error => console.error('Ошибка:', error));
     }
 
-    //Заполнение таблицы пользователями(конец)
-    //первое заполнение при старте страницы
-    getUserList()
+    function getUserListMin() {
+        const userData = document.getElementById("userData")
+        fetch('/users')
+            .then(response => response.json())
+            .then(users => {
+                userData.innerHTML = '';
+                for (const user of users) {
+                    let row = userData.insertRow();
+                    row.insertCell().innerHTML = user.id
+                    row.insertCell().innerHTML = user.username
+                    row.insertCell().innerHTML = user.city
+                    row.insertCell().innerHTML = user.age
+                    row.insertCell().innerHTML = user.roles.map(function (role) {
+                        return ' ' + role.name;
+                    });
+                }
+            })
+            .catch(error => console.error('Ошибка:', error));
+    }
 
-    //Обработка изменения
+    //Заполнение таблицы пользователями(конец)
+    //первое заполнение при старте страниц
+    getUserList()
+    getUserListMin()
+
+    //показываем модальное окно изменения
     function getEditModal(id) {
         let form = document.forms.namedItem("editForm");
         fillModal(id, form)
     }
 
+    //показываем модальное окно удаления
     function getDeleteModal(id) {
         let form = document.forms.namedItem("deleteForm");
         fillModal(id, form)
     }
 
+    //заполняем модальное окно
     function fillModal(id, form) {
         fetch('user/' + id)
             .then(response => response.json())
@@ -450,7 +470,143 @@
     }
 
 
+    //Обработка кнопки удаления
+    //Получаем элемент формы
+    const deleteForm = document.forms.namedItem("deleteForm");
+    //Слушатель ждет submit
+    deleteForm.addEventListener("submit", remove);
+
+    // Обрабатываем submit
+    function remove(e) {
+        e.preventDefault();
+        //получаем элемент кнопки закрывания
+        const closeButton = document.getElementById("closeDelete")
+        let id = deleteForm.elements.namedItem("id").value
+
+        fetch('/admin/delete/' + id, {
+            method: 'DELETE',
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        })
+            .then(response => {
+                getUserList();
+                getUserListMin()
+                // закрываем окно кнопкой
+                closeButton.click();
+            })
+
+            .catch(error => console.error('Ошибка:', error));
+    }
+
+
+    //Обработка кнопки Edit
+    const editForm = document.forms.namedItem("editForm");
+
+    editForm.addEventListener("submit", update);
+
+    function update(e) {
+        e.preventDefault();
+        const closeButton = document.getElementById("closeEdit")
+        const rolesOption = editForm.elements.namedItem("rolesArray");
+        let selectedRoles = [];
+        for (const rolesSelect of rolesOption) {
+            if (rolesSelect.selected) {
+                if (rolesSelect.text === 'ROLE_USER') {
+                    selectedRoles.push({
+                        id: 1,
+                        name: rolesSelect.text
+                    });
+                } else {
+                    selectedRoles.push({
+                        id: 2,
+                        name: rolesSelect.text
+                    });
+                }
+            }
+        }
+        fetch('/admin/update', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: editForm.elements.namedItem("id").value,
+                username: editForm.elements.namedItem("username").value,
+                city: editForm.elements.namedItem("city").value,
+                age: editForm.elements.namedItem("age").value,
+                password: editForm.elements.namedItem("password").value,
+                roles: selectedRoles
+            })
+
+        })
+            .then(response => {
+                getUserList();
+                getUserListMin()
+                closeButton.click();
+                for (const rolesSelect of rolesOption) {
+                    rolesSelect.selected = false
+                }
+            })
+            .catch((error) => {
+                console.error('Ошибка:', error);
+            });
+    }
+
+    //Обработка кнопки Edit (конец)
+
+
+    //Добавление нового пользователя
+    const addForm = document.forms.namedItem("addForm");
+
+    addForm.addEventListener("submit", add);
+
+    function add(e) {
+        e.preventDefault();
+        const rolesOption = addForm.elements.namedItem("rolesArray");
+        let selectedRoles = [];
+        for (const rolesSelect of rolesOption) {
+            if (rolesSelect.selected) {
+                if (rolesSelect.text === 'ROLE_USER') {
+                    selectedRoles.push({
+                        id: 1,
+                        name: rolesSelect.text
+                    });
+                } else {
+                    selectedRoles.push({
+                        id: 2,
+                        name: rolesSelect.text
+                    });
+                }
+            }
+        }
+        fetch('/admin/adds', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: addForm.elements.namedItem("username").value,
+                city: addForm.elements.namedItem("city").value,
+                age: addForm.elements.namedItem("age").value,
+                password: addForm.elements.namedItem("password").value,
+                roles: selectedRoles
+            }),
+        })
+            .then(response => {
+                getUserList();
+                getUserList();
+                getUserListMin()
+                alert('Пользователь добавлен')
+            })
+            .catch((error) => {
+                console.error('Ошибка:', error);
+            });
+    }
+
+    //Добавление нового пользователя(конец)
+
     /*
+    черновики знаю, что не хорошо их оставлять, но онимне на будущее нужны :)
+
     const t = {
     name: 'Vladlen',
     age: 26
@@ -480,7 +636,6 @@
     }
     })
     */
-
 </script>
 </body>
 </html>
