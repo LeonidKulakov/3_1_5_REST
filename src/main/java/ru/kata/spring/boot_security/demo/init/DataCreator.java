@@ -2,7 +2,7 @@ package ru.kata.spring.boot_security.demo.init;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import ru.kata.spring.boot_security.demo.DTO.AddUserDTO;
+import ru.kata.spring.boot_security.demo.DTO.UserDTO;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
@@ -29,10 +29,11 @@ public class DataCreator implements CommandLineRunner {
 
     private void createUser() {
 //        userService.add(new User("user", "user", 18, "Рязань", roleRepository.findAll()));
-        userService.add(new AddUserDTO("user",18,"Рязань","user",roleRepository.findAll()));
+//        userService.add(new AddUserDTO("user",18,"Рязань","user",roleRepository.findAll()));
+        userService.add(new UserDTO(0L,"user","user",18,"Рязань",roleRepository.findAll()));
         List<Role> roles = new ArrayList<>();
         roles.add(roleRepository.findByName("ROLE_USER").get());
-        userService.add(new AddUserDTO("11",11,"11","11",roles));
+//        userService.add(new AddUserDTO("11",11,"11","11",roles));
     }
 
     private void createRoles() {

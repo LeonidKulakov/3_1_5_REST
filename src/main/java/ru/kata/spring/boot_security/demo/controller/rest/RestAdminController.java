@@ -3,8 +3,7 @@ package ru.kata.spring.boot_security.demo.controller.rest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.DTO.AddUserDTO;
-import ru.kata.spring.boot_security.demo.DTO.EditUserDTO;
+import ru.kata.spring.boot_security.demo.DTO.UserDTO;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
@@ -28,14 +27,13 @@ public class RestAdminController {
     }
 
     @PostMapping(value = "admin/adds")
-    public ResponseEntity<HttpStatus> add(@RequestBody @Valid AddUserDTO user) {
+    public ResponseEntity<HttpStatus> add(@RequestBody @Valid UserDTO user) {
         userService.add(user);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @GetMapping("user/{id}")
     public ResponseEntity<User> getUser(@PathVariable long id) {
-        System.out.println(id);
         final User user = userService.findById(id);
         return user != null
                 ? new ResponseEntity<>(user, HttpStatus.OK)
@@ -49,8 +47,7 @@ public class RestAdminController {
     }
 
     @PatchMapping(value = "admin/update")
-    public ResponseEntity<HttpStatus> update(@RequestBody @Valid EditUserDTO user) {
-        System.out.println(user);
+    public ResponseEntity<HttpStatus> update(@RequestBody @Valid UserDTO user) {
         userService.updateUser(user);
         return ResponseEntity.ok(HttpStatus.OK);
     }

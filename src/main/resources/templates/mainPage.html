@@ -455,7 +455,7 @@
 
     //заполняем модальное окно
     function fillModal(id, form) {
-        fetch('user/' + id)
+        fetch('/user/' + id)
             .then(response => response.json())
             .then(user => {
                 form.elements.namedItem("id").value = user.id;
@@ -584,6 +584,7 @@
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
+                id: 0,
                 username: addForm.elements.namedItem("username").value,
                 city: addForm.elements.namedItem("city").value,
                 age: addForm.elements.namedItem("age").value,

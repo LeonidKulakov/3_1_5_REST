@@ -3,9 +3,8 @@ package ru.kata.spring.boot_security.demo.service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.DTO.AddUserDTO;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.DTO.EditUserDTO;
+import ru.kata.spring.boot_security.demo.DTO.UserDTO;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
@@ -36,7 +35,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void add(AddUserDTO user) {
+    public void add(UserDTO user) {
         User userForBD = new User();
         userForBD.setUsername(user.getUsername());
         userForBD.setCity(user.getCity());
@@ -47,7 +46,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(EditUserDTO user) {
+    public void updateUser(UserDTO user) {
         User userFromDB = userRepository.findById(user.getId()).get();
         userFromDB.setUsername(user.getUsername());
         userFromDB.setAge(user.getAge());

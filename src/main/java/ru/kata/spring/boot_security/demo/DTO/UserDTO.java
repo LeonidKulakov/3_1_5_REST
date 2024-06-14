@@ -7,7 +7,7 @@ import java.util.Objects;
 /**
  * Класс - промежуточное звено, мнежду request body и entity User
  * */
-public class EditUserDTO {
+public class UserDTO {
     private Long id;
 
     private String username;
@@ -18,7 +18,7 @@ public class EditUserDTO {
     private List<Role> roles;
 
 
-    public EditUserDTO(Long id, String username, String password, Integer age, String city, List<Role> roles) {
+    public UserDTO(Long id, String username, String password, Integer age, String city, List<Role> roles) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -79,7 +79,7 @@ public class EditUserDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        EditUserDTO userModel = (EditUserDTO) o;
+        UserDTO userModel = (UserDTO) o;
         return Objects.equals(id, userModel.id) && Objects.equals(username, userModel.username) && Objects.equals(password, userModel.password) && Objects.equals(age, userModel.age) && Objects.equals(city, userModel.city) && Objects.equals(roles, userModel.roles);
     }
 
