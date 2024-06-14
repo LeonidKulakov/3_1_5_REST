@@ -14,6 +14,7 @@
         <div class="container-fluid">
             <div th:object="${user}">
                 <span class="fw-bold" th:text="*{username}"/>
+                <input class="d-none" id="usName" th:value="${user.getId()}">
                 <span> with roles: </span>
                 <span>USER </span>
                 <span>ADMIN</span>
@@ -415,23 +416,22 @@
             })
             .catch(error => console.error('Ошибка:', error));
     }
-
+    const usersTableBtn = document.getElementById('home-tab');
+    const us = document.getElementById('usName')
     function getUserListMin() {
         const userData = document.getElementById("userData")
-        fetch('/users')
+        fetch('/user/' + us.value)
             .then(response => response.json())
-            .then(users => {
+            .then(user => {
                 userData.innerHTML = '';
-                for (const user of users) {
-                    let row = userData.insertRow();
-                    row.insertCell().innerHTML = user.id
-                    row.insertCell().innerHTML = user.username
-                    row.insertCell().innerHTML = user.city
-                    row.insertCell().innerHTML = user.age
-                    row.insertCell().innerHTML = user.roles.map(function (role) {
-                        return ' ' + role.name;
-                    });
-                }
+                let row = userData.insertRow();
+                row.insertCell().innerHTML = user.id
+                row.insertCell().innerHTML = user.username
+                row.insertCell().innerHTML = user.city
+                row.insertCell().innerHTML = user.age
+                row.insertCell().innerHTML = user.roles.map(function (role) {
+                    return ' ' + role.name;
+                });
             })
             .catch(error => console.error('Ошибка:', error));
     }
@@ -594,8 +594,9 @@
             .then(response => {
                 getUserList();
                 getUserList();
-                getUserListMin()
-                alert('Пользователь добавлен')
+                getUserListMin();
+                usersTableBtn.click();
+
             })
             .catch((error) => {
                 console.error('Ошибка:', error);

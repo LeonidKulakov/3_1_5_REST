@@ -1,9 +1,15 @@
-package ru.kata.spring.boot_security.demo.model;
+package ru.kata.spring.boot_security.demo.DTO;
+
+import ru.kata.spring.boot_security.demo.model.Role;
 
 import java.util.List;
 import java.util.Objects;
+/**
+ * Класс - промежуточное звено, мнежду request body и entity User
+ * */
+public class EditUserDTO {
+    private Long id;
 
-public class AddUserModel {
     private String username;
 
     private String password;
@@ -11,12 +17,22 @@ public class AddUserModel {
     private String city;
     private List<Role> roles;
 
-    public AddUserModel(String username, Integer age, String city, String password, List<Role> roles) {
+
+    public EditUserDTO(Long id, String username, String password, Integer age, String city, List<Role> roles) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.age = age;
         this.city = city;
         this.roles = roles;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -63,19 +79,20 @@ public class AddUserModel {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AddUserModel that = (AddUserModel) o;
-        return Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(age, that.age) && Objects.equals(city, that.city) && Objects.equals(roles, that.roles);
+        EditUserDTO userModel = (EditUserDTO) o;
+        return Objects.equals(id, userModel.id) && Objects.equals(username, userModel.username) && Objects.equals(password, userModel.password) && Objects.equals(age, userModel.age) && Objects.equals(city, userModel.city) && Objects.equals(roles, userModel.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, password, age, city, roles);
+        return Objects.hash(id, username, password, age, city, roles);
     }
 
     @Override
     public String toString() {
-        return "AddUserModel{" +
-                "username='" + username + '\'' +
+        return "UserModel{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", age=" + age +
                 ", city='" + city + '\'' +
